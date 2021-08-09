@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Performance } from '../performance.model';
 import { PerformancesService } from '../performances.service';
@@ -8,25 +8,30 @@ import { PerformancesService } from '../performances.service';
   templateUrl: './repertoire.page.html',
   styleUrls: ['./repertoire.page.scss'],
 })
-export class RepertoirePage implements OnInit {
+export class RepertoirePage implements OnInit, OnDestroy{
 
 
   performances: Performance[];
   private performancesSub: Subscription;
 
-  constructor(private PerformancesService: PerformancesService) { }
+  constructor(private performancesService: PerformancesService) { }
 
   ngOnInit() {
-    this.performancesSub = this.PerformancesService.performances.subscribe(performances => {
+    this.performancesSub = this.performancesService.performances.subscribe(performances => {
       this.performances = performances;
     });
 
   }
 
   ionViewWillEnter() {
-    this.PerformancesService.getPerformances().subscribe(performances => {
-
+    this.performancesService.getPerformances().subscribe(performances => {
     });
+  }
+
+  ngOnDestroy() {
+    if (this.performancesSub) {
+      this.performancesSub.unsubscribe();
+    }
   }
 
 }

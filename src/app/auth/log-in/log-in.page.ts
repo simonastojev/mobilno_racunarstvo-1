@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoadingController, NavController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -11,16 +12,44 @@ import { AuthService } from '../auth.service';
 export class LogInPage implements OnInit {
 
   isLoading = false;
-  constructor(private authService: AuthService, private router: Router) { }
+
+  validationUserMessage = {
+    email: [
+      {type: 'required', message:'Unesite Vašu email adresu'},
+      {type: 'pattern', message: 'Email adresa nije ispravna. Pokušajte ponovo'}
+    ],
+    password: [
+      {type: 'required', message:'Unesite Vašu lozinku'},
+      {type: 'minlength', message: 'Lozinka mora da ima minimum 7 karaktera'}
+    ]
+  };
+
+  loginForm: FormGroup;
+
+  constructor(public formBuilder: FormBuilder,
+              private authService: AuthService,
+              private loadingCtl: LoadingController,
+              private router: Router,
+              private nav: NavController) { }
 
   ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+      email: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+      ])),
+      password: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.minLength(7)
+      ])),
+    });
   }
 
-  onLogIn(form: NgForm){
+  onLogin(){
     this.isLoading = true;
-    if(form.valid){
-      this.authService.logIn(form.value).subscribe(resData => {
-        console.log("Prijava uspesna");
+    if(this.loginForm.valid){
+      this.authService.logIn(this.loginForm.value).subscribe(resData => {
+        console.log('Prijava uspešna');
         console.log(resData);
         this.isLoading = false;
         this.router.navigateByUrl('/performances');
@@ -28,6 +57,10 @@ export class LogInPage implements OnInit {
 
     }
 
+  }
+
+  goToRegisterPage(){
+    this.nav.navigateForward(['signup']);
   }
 
 }

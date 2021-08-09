@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +21,7 @@ export class AddNewPage implements OnInit {
 
     this.performanceService.addPerformance(form.value['name'], form.value['date'], form.value['place'],
     form.value['price'], form.value['actors'], form.value['imageUrl']).subscribe(res => {
-      console.log(res)
+      console.log(res);
     });
 
     this.router.navigateByUrl('/performances/tabs/repertoire');

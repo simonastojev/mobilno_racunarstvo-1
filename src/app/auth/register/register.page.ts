@@ -1,6 +1,6 @@
 import { Route } from '@angular/compiler/src/core';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
@@ -12,32 +12,69 @@ import { AuthService } from '../auth.service';
 })
 export class RegisterPage implements OnInit {
 
+  validationUserMessage = {
+    fullname: [
+      {type: 'required', message:'Unesite Vaše ime i prezime'},
+    ],
+    phoneNumber: [
+      {type: 'required', message:'Unesite broj Vašeg mobilnog telefona'},
+      {type: 'minlength', message: 'Broj mobilnog telefona mora da ima minimum 9 cifara'}
+    ],
+    address: [
+      {type: 'required', message:'Unesite Vašu kućnu adresu'},
+    ],
+    email: [
+      {type: 'required', message:'Unesite Vašu email adresu'},
+      {type: 'pattern', message: 'Email adresa nije ispravna. Pokušajte ponovo'}
+    ],
+    password: [
+      {type: 'required', message:'Unesite Vašu lozinku'},
+      {type: 'minlength', message: 'Lozinka mora da ima minimum 7 karaktera'}
+    ]
+  };
+
   registerForm: FormGroup;
 
-  constructor(private authService: AuthService,
+  constructor(public formBuilder: FormBuilder,
+              private authService: AuthService,
               private loadingCtl: LoadingController,
               private router: Router) { }
 
+
   ngOnInit() {
-    this.registerForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      surname: new FormControl(null, Validators.required),
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(7)])
+    this.registerForm = this.formBuilder.group({
+      fullname: new FormControl('', Validators.compose([
+        Validators.required
+      ])),
+      phoneNumber: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.minLength(9)
+      ])),
+      email: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+      ])),
+      password: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.minLength(7)
+      ])),
     });
   }
 
   onRegister() {
     this.loadingCtl
-    .create({message: "Registracija..."})
+    .create({message: 'Registracija...'})
     .then((loadingEl) => {
         loadingEl.present();
         this.authService.register(this.registerForm.value).subscribe(resData => {
-          console.log("Registracija uspela");
+          console.log('Uspešna registracija');
           console.log(resData);
+          /*this.authService.addUser(this.registerForm.value).subscribe(res => {
+            console.log(res);
+          });*/
+          loadingEl.dismiss();
+          this.router.navigateByUrl('/performances');
         });
-        loadingEl.dismiss();
-        this.router.navigateByUrl('/performances');
     });
 
   }

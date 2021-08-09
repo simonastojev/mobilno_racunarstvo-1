@@ -5,14 +5,14 @@ import { AuthGuard } from './auth/auth.guard';
 const routes: Routes = [
 
   {
-    path: '',
-    redirectTo: 'performances',
-    pathMatch: 'full'
-  },
-  {
     path: 'performances',
     loadChildren: () => import('./performances/performances.module').then( m => m.PerformancesPageModule),
     canLoad: [AuthGuard]
+  },
+  {
+    path: '',
+    redirectTo: 'performances',
+    pathMatch: 'full'
   },
   {
     path: 'log-in',
@@ -31,6 +31,10 @@ const routes: Routes = [
     path: 'admin-users',
     loadChildren: () => import('./admin-users/admin-users.module').then( m => m.AdminUsersPageModule),
     canLoad: [AuthGuard]
+  },
+  {
+    path: 'welcome',
+    loadChildren: () => import('./auth/welcome/welcome.module').then( m => m.WelcomePageModule)
   },
 
 ];

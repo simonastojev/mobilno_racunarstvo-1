@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -13,14 +14,14 @@ interface AuthResponseData {
   localId: string;
   expiresIn: string;
   registered?: boolean;
-
 }
 
 interface UserData {
-  name?: string;
-  surname?: string;
+  fullname: string;
+  phoneNumber: string;
   email: string;
   password: string;
+  role: string;
 
 }
 
@@ -28,6 +29,8 @@ interface UserData {
   providedIn: 'root'
 })
 export class AuthService {
+  private userRole = 'user';
+  private adminRole = 'admin';
   private _isUserAuthenticated = false;
   private _user = new BehaviorSubject<User>(null);
 
@@ -37,7 +40,7 @@ export class AuthService {
     return this._user.asObservable().pipe(
       map((user) => {
         if (user) {
-          return !!user.token;;
+          return !!user.token;
         } else {
           return false;
         }
@@ -70,35 +73,50 @@ export class AuthService {
   }
 
 
-  register(user: UserData){
+  register(user: UserData) {
     this._isUserAuthenticated = true;
     return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
-              {email: user.email, password: user.password, returnSecureToken: true})
-            .pipe(
-            tap((userData) => {
-              const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
-              const user = new User(userData.localId, userData.email, userData.idToken, expirationTime);
-              this._user.next(user);
-
-            })
-        );
-
+      {email: user.email, password: user.password, returnSecureToken: true})
+      .pipe(
+        tap((userData) => {
+          const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
+          const newUser = new User(userData.localId, userData.email, userData.idToken, expirationTime);
+          this._user.next(newUser);
+        })
+      );
   }
 
   logIn(user: UserData){
     this._isUserAuthenticated = true;
-    return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`,
+    return this.http.post<AuthResponseData>(
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`,
               {email: user.email, password: user.password, returnSecureToken: true})
             .pipe(
             tap((userData) => {
               const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
-              const user = new User(userData.localId, userData.email, userData.idToken, expirationTime);
-              this._user.next(user);
+              const newUser = new User(userData.localId, userData.email, userData.idToken, expirationTime);
+              this._user.next(newUser);
             })
         );
   }
 
   logOut() {
     this._user.next(null);
+  }
+
+  addUser(user: UserData){
+    if(user.email === 'admin@admin.com'){
+      return this.http.post<{name: string}>(
+        'https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
+          fullname: user.fullname, phoneNumber: user.phoneNumber,
+          email: user.email, role: this.adminRole
+      });
+    }else{
+      return this.http.post<{name: string}>(
+        'https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
+          fullname: user.fullname, phoneNumber: user.phoneNumber,
+          email: user.email, role: this.userRole
+      });
+    }
   }
 }

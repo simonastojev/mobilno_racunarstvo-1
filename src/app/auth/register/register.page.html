@@ -1,67 +1,128 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title color="tertiary">Registracija</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="welcome" text="" color="primary"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="bg-color">
+  <ion-card class="ion-no-margin">
+    <ion-card-header>
+      <ion-card-title>
+        Registracija
+      </ion-card-title>
 
-<ion-content>
+      <ion-card-subtitle>
+        Napravite svoj nalog
+        popunjavanjem forme u nastavku
+      </ion-card-subtitle>
+    </ion-card-header>
 
-  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-    <ion-grid>
-      <ion-row>
-        <ion-col size-sm="3" offset-sm="2">
-          <ion-item>
-            <ion-label position="floating">Ime</ion-label>
-            <ion-input type="text" formControlName="name"></ion-input>
-          </ion-item>
-        </ion-col>
+    <ion-card-content>
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <ion-grid>
+          <ion-row>
+            <ion-col size-sm="6" offset-sm="3">
 
-        <ion-col size-sm="3" offset-sm="2">
-          <ion-item>
-            <ion-label position="floating">Prezime</ion-label>
-            <ion-input type="text" formControlName="surname"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+              <ion-item>
+                <ion-icon name="person"></ion-icon>
+                <ion-input name="fullname" type="text" formControlName="fullname"
+                  placeholder="Ime i prezime" required
+                ></ion-input>
+              </ion-item>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Email adresa</ion-label>
-            <ion-input type="email" formControlName="email"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+              <div>
+                <ng-container *ngFor="let validation of validationUserMessage.fullname">
+                  <small
+                    *ngIf="registerForm.get('fullname').hasError(validation.type) &&
+                    (registerForm.get('fullname').dirty ||
+                    registerForm.get('fullname').touched)">
+                    {{validation.message}}
+                  </small>
+                </ng-container>
+              </div>
 
-      <ion-row *ngIf="registerForm.get('email').invalid && registerForm.get('email').touched">
-        <ion-col size-sm="6" offset-sm="3">
-          <p>Unesite validnu email adresu</p>
-        </ion-col>
-      </ion-row>
+              <ion-item>
+                <ion-icon name="call"></ion-icon>
+                <ion-input name="phoneNumber" type="text" formControlName="phoneNumber"
+                  placeholder="Broj telefona" required
+                ></ion-input>
+              </ion-item>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Lozinka</ion-label>
-            <ion-input type="password" formControlName="password"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+              <div>
+                <ng-container *ngFor="let validation of validationUserMessage.phoneNumber">
+                  <small
+                    *ngIf="registerForm.get('phoneNumber').hasError(validation.type) &&
+                    (registerForm.get('phoneNumber').dirty ||
+                    registerForm.get('phoneNumber').touched)">
+                    {{validation.message}}
+                  </small>
+                </ng-container>
+              </div>
 
-      <ion-row *ngIf="registerForm.get('password').invalid && registerForm.get('password').touched">
-        <ion-col size-sm="6" offset-sm="3">
-          <p>Lozinka treba da ima minimum 7 karaktera</p>
-        </ion-col>
-      </ion-row>
+              <ion-item>
+                <ion-icon name="mail"></ion-icon>
+                <ion-input name="email" type="text" formControlName="email"
+                  placeholder="Email" required
+                ></ion-input>
+              </ion-item>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-button type="submit" color="secondary" shape="round" expand="block">Registruj se</ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </form>
+              <div>
+                <ng-container *ngFor="let validation of validationUserMessage.email">
+                  <small
+                    *ngIf="registerForm.get('email').hasError(validation.type) &&
+                    (registerForm.get('email').dirty ||
+                    registerForm.get('email').touched)">
+                    {{validation.message}}
+                  </small>
+                </ng-container>
+              </div>
+
+              <ion-item>
+                <ion-icon name="lock-closed"></ion-icon>
+                <ion-input type="password" name="password" formControlName="password"
+                  placeholder="Lozinka" required
+                ></ion-input>
+              </ion-item>
+
+              <div>
+                <ng-container *ngFor="let validation of validationUserMessage.password">
+                  <small
+                    *ngIf="registerForm.get('password').hasError(validation.type) &&
+                    (registerForm.get('password').dirty ||
+                    registerForm.get('password').touched)">
+                    {{validation.message}}
+                  </small>
+                </ng-container>
+              </div>
+
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <div class="sign-btn-wrap">
+          <ion-button type="submit" shape="round" fill="solid" class="sign-btn" [disabled]="!registerForm.valid">Registruj se</ion-button>
+        </div>
+
+        <div class="text-tag">
+          <span color="tertiary">Možete napraviti nalog i putem:</span>
+        </div>
+
+        <div class="social-btns">
+          <ion-button fill="clear" class="facebookbtn ion-no-padding">
+            <ion-img src="assets/images/facebook.png"></ion-img>
+          </ion-button>
+          <ion-button fill="clear" class="googlebtn ion-no-padding">
+            <ion-img src="assets/images/google.png"></ion-img>
+          </ion-button>
+          <ion-button fill="clear" class="applebtn ion-no-padding">
+            <ion-img src="assets/images/apple.png"></ion-img>
+          </ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>
+
