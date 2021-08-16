@@ -8,80 +8,143 @@
 </ion-header>
 
 <ion-content>
+  <ion-card class="ion-no-margin">
+    <ion-card-header>
+      <ion-card-title>
+        Nova predstava
+      </ion-card-title>
 
-  <form #formAdd="ngForm" (ngSubmit)="onAddPerformance(formAdd)">
-    <ion-grid>
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Naziv</ion-label>
-            <ion-input type="text" ngModel name="name"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+      <ion-card-subtitle>
+        Popunjavanjem forme u nastavku možete da dodate novu predstavu u repertoar
+      </ion-card-subtitle>
+    </ion-card-header>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Datum</ion-label>
-            <ion-datetime type="text" displayFormat="MMM DD, YYYY HH:mm" ngModel name="date"></ion-datetime>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+  <ion-card-content>
+    <form [formGroup]="addPerformance" (ngSubmit)="onAddPerformance()">
+      <ion-grid>
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-item>
+              <ion-label position="floating">Naziv</ion-label>
+              <ion-input type="text" name="name" formControlName="name" required></ion-input>
+            </ion-item>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Cena karte</ion-label>
-            <ion-input type="number" ngModel name="price"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.name">
+                <small
+                  *ngIf="addPerformance.get('name').hasError(validation.type) &&
+                  (addPerformance.get('name').dirty ||
+                  addPerformance.get('name').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Scena</ion-label>
-            <ion-input type="text" ngModel name="place"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+            <ion-item>
+              <ion-label position="floating">Opis radnje</ion-label>
+              <ion-textarea rows="6" type="text" name="description" formControlName="description" required></ion-textarea>
+            </ion-item>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Glumci</ion-label>
-            <ion-textarea rows="6" ngModel name="actors"></ion-textarea>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.description">
+                <small
+                  *ngIf="addPerformance.get('description').hasError(validation.type) &&
+                  (addPerformance.get('description').dirty ||
+                  addPerformance.get('description').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
 
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label position="floating">Slika</ion-label>
-            <ion-input type="text" ngModel name="imageUrl"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+            <ion-item>
+              <ion-label position="floating">Datum</ion-label>
+              <ion-datetime type="text" displayFormat="MMM DD, YYYY HH:mm" name="date" formControlName="date" required></ion-datetime>
+            </ion-item>
 
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.date">
+                <small
+                  *ngIf="addPerformance.get('date').hasError(validation.type) &&
+                  (addPerformance.get('date').dirty ||
+                  addPerformance.get('date').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
 
-      <ion-row>
-      <!---
-        <ion-col size-sm="3" offset-sm="3">
-          <ion-button type="submit" color="secondary" expand="block" shape="round">
-            Odustani
-          </ion-button>
-        </ion-col>
-      -->
-        <ion-col size-sm="3" offset-sm="3">
-          <ion-button type="submit" color="secondary" expand="block" shape="round">
-            Dodaj
-          </ion-button>
-        </ion-col>
+            <ion-item>
+              <ion-label position="floating">Scena</ion-label>
+              <ion-input type="text" name="place" formControlName="place" required></ion-input>
+            </ion-item>
 
-      </ion-row>
-    </ion-grid>
-  </form>
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.place">
+                <small
+                  *ngIf="addPerformance.get('place').hasError(validation.type) &&
+                  (addPerformance.get('place').dirty ||
+                  addPerformance.get('place').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
 
+            <ion-item>
+              <ion-label position="floating">Cena karte u dinarima</ion-label>
+              <ion-input type="number" name="price" formControlName="price" required></ion-input>
+            </ion-item>
+
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.price">
+                <small
+                  *ngIf="addPerformance.get('price').hasError(validation.type) &&
+                  (addPerformance.get('price').dirty ||
+                  addPerformance.get('price').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
+
+            <ion-item>
+              <ion-label position="floating">Glumci</ion-label>
+              <ion-textarea rows="6" name="actors" formControlName="actors" required></ion-textarea>
+            </ion-item>
+
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.actors">
+                <small
+                  *ngIf="addPerformance.get('actors').hasError(validation.type) &&
+                  (addPerformance.get('actors').dirty ||
+                  addPerformance.get('actors').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
+
+            <ion-item>
+              <ion-label position="floating">Slika</ion-label>
+              <ion-input type="text" name="imageUrl" formControlName="imageUrl" required></ion-input>
+            </ion-item>
+
+            <div>
+              <ng-container *ngFor="let validation of validationMessage.imageUrl">
+                <small
+                  *ngIf="addPerformance.get('imageUrl').hasError(validation.type) &&
+                  (addPerformance.get('imageUrl').dirty ||
+                  addPerformance.get('imageUrl').touched)">
+                  {{validation.message}}
+                </small>
+              </ng-container>
+            </div>
+
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <div class="sign-btn-wrap">
+        <ion-button type="submit" shape="round" fill="solid" class="sign-btn" [disabled]="!addPerformance.valid">Sačuvaj</ion-button>
+      </div>
+
+    </form>
+  </ion-card-content>
+</ion-card>
 </ion-content>

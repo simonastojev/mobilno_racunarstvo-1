@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title color="tertiary">Izmena predstave</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close" slot="icon-only" color="tertiary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="ion-no-margin">
+
+    <ion-card-content>
+      <form #editPerformance="ngForm" (ngSubmit)="onEditPerformance()">
+        <ion-grid>
+          <ion-row>
+            <ion-col size-sm="6" offset-sm="3">
+
+              <ion-item>
+                <ion-label position="floating" color="primary">Naziv predstave</ion-label>
+                <ion-input type="text" [ngModel]='name' name="name" required></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label  position="floating" color="primary">Opis radnje</ion-label>
+                <ion-textarea rows="6" type="text" [ngModel]='description' name="description" required></ion-textarea>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating" color="primary">Datum</ion-label>
+                <ion-datetime type="text" displayFormat="MMM DD, YYYY HH:mm" [ngModel]='date' name="date" required></ion-datetime>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating" color="primary">Scena</ion-label>
+                <ion-input type="text" [ngModel]='place' name="place" required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating" color="primary">Cena karte u dinarima</ion-label>
+                <ion-input type="number" [ngModel]='price' name="price" required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating" color="primary">Glumci</ion-label>
+                <ion-textarea rows="6" type="text" [ngModel]='actors' name="actors" required></ion-textarea>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating" color="primary">URL adresa slike predstave</ion-label>
+                <ion-input type="text" [ngModel]='imageUrl' name="imageUrl" required>
+                </ion-input>
+              </ion-item>
+
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <div class="sign-btn-wrap">
+          <ion-button type="submit" shape="round" fill="solid" class="sign-btn" [disabled]="!editPerformance.valid">Sačuvaj</ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

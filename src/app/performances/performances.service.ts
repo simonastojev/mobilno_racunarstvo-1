@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable no-underscore-dangle */
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,12 +11,13 @@ import { AuthService } from '../auth/auth.service';
 
 interface PerformanceData {
   name: string;
+  description: string;
   date: Date;
   place: string;
   price: number;
   actors: string;
   imageUrl: string;
-  userId: string;
+  //userId: string;
 }
 
 @Injectable({
@@ -23,6 +26,7 @@ interface PerformanceData {
 export class PerformancesService {
   private _performances = new BehaviorSubject<Performance[]>([]);
 
+  /*
   private oldPerformances: Performance[] = [
     {
       id: '1',
@@ -33,7 +37,7 @@ export class PerformancesService {
       actors: `Nenad Jezdić, Mihail Lavovič, Milica Gojković, Marija Vicković,
               Bogdan Diklić, Aleksandra Nikolić, Dubravko Jovanović, Branislav Lečić`,
       imageUrl: 'https://www.jdp.rs/wp-content/uploads/2019/05/PLAKAT-Ujka-Vanja.jpg',
-      userId: 'kjsks'
+      //userId: 'kjsks'
     },
     {
       id: '2',
@@ -45,17 +49,47 @@ export class PerformancesService {
               Jovana Belović, Bogdana Obradović, Vesna Stankovič, Cvijeta Mesić, Bojan Dimitrijević,
               Nebojša Milovanović,Goran Šušljik, Maja Kolundžija Zoroe`,
       imageUrl: 'https://www.jdp.rs/wp-content/uploads/2020/10/Pucina-Latinica.jpg',
-      userId: 'djdsa'
+      //userId: 'djdsa'
     }
   ];
+  */
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   get performances() {
     return this._performances.asObservable();
   }
 
-  addPerformance(name: string, date: Date, place: string, price: number, actors: string, imageUrl: string) {
+  addPerformance(name: string, description: string, date: Date, place: string, price: number, actors: string, imageUrl: string) {
     let generatedId;
+
+    return this.http.post<{name: string}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances.json`,
+      { name,
+        description,
+        date,
+        place,
+        price,
+        actors,
+        imageUrl,
+      }).pipe(switchMap((resData) => {
+
+        generatedId = resData.name;
+        return this.performances;
+
+      }), take(1), tap(performances => {
+        this._performances.next(performances.concat({
+          id: generatedId,
+          name,
+          description,
+          date,
+          place,
+          price,
+          actors,
+          imageUrl,
+        }));
+      })
+    );
+
+    /*
     let newPerformance: Performance;
 
     return this.authService.userId.pipe(
@@ -85,52 +119,35 @@ export class PerformancesService {
         this._performances.next(performances.concat(newPerformance));
       })
     );
-
-    /*
-    return this.http.post<{name: string}>('https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/performances.json', {
-      name, date, place, price, actors, imageUrl
-    }).pipe(switchMap ((resData) => {
-      generatedId = resData.name;
-      return this.performances;
-
-    }), take(1), tap((performances) => {
-      this._performances.next(performances.concat({
-        id: generatedId,
-        name,
-        date,
-        place,
-        price,
-        actors,
-        imageUrl,
-      }));
-    }));
     */
+
+
   }
 
   getPerformances() {
-    /*
-    return this.http
-    .get<{[key: string]: PerformanceData}>(
-      `https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/performances.json`)
-    .pipe(map((performancesData) => {
+    return this.http.
+      get<{[key: string]: PerformanceData}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app//performances.json`)
+      .pipe(map((performanceData) => {
       const performances: Performance[] = [];
 
-      for(const key in performancesData) {
-        if(performancesData.hasOwnProperty(key)) {
-          performances.push(new Performance(key, performancesData[key].name,
-            new Date(performancesData[key].date), performancesData[key].place,
-            performancesData[key].price, performancesData[key].actors,
-            performancesData[key].imageUrl, performancesData[key].userId)
-          );
-        }
+      for(const key in performanceData){
+      if(performanceData.hasOwnProperty(key)){
+        performances.push({
+          id: key,
+          name: performanceData[key].name,
+          description: performanceData[key].description,
+          date: performanceData[key].date,
+          place: performanceData[key].place,
+          price: performanceData[key].price,
+          actors: performanceData[key].actors,
+          imageUrl: performanceData[key].imageUrl,
+        });
       }
-      return performances;
-    }),
-      tap(performances => {
-        this._performances.next(performances);
-      })
-    );
-    */
+    }
+    this._performances.next(performances);
+    return performances;
+  }));
+    /*
     return this.authService.token.pipe(
       take(1),
       switchMap((token) => this.http
@@ -157,24 +174,85 @@ export class PerformancesService {
         this._performances.next(performances);
       })
     );
-  }
-
-  getAllPerformances(){
-    return [...this.oldPerformances];
-    /*uzima sve iz niza predstava i smesta u novi niz*/
-  }
-
-  getPerformance(performanceId: string){
-    return {
-      ...this.oldPerformances.find(performance => performance.id === performanceId)
-    };
+    */
   }
 
 
-  deletePerformance(performanceId: string){
-    /*this.oldPerformances = this.oldPerformances.filter(performance => {
-      return performance.id !== performanceId;
-    });*/
+  getPerformance(id: string){
+    return this.http
+    .get<PerformanceData>(
+    `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json`)
+    .pipe(map((resData: PerformanceData) => {
+      return new Performance(
+        id,
+        resData.name,
+        resData.description,
+        resData.date,
+        resData.place,
+        resData.price,
+        resData.actors,
+        resData.imageUrl
+      );
+    }));
+  }
+
+
+  deletePerformance(id: string){
+    return this.http.delete(
+      `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json`)
+    .pipe(switchMap(() => {
+      return this.performances;
+    }),
+    take(1),
+    tap((performances) => {
+      this._performances.next(performances.filter((p) => p.id !== id));
+    })
+    );
+  }
+
+  editPerformance(
+    id: string,
+    name: string,
+    description: string,
+    date: Date,
+    place: string,
+    price: number,
+    actors: string,
+    imageUrl: string
+    )
+    {
+    return this.http
+    .put(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json`,
+    {
+      name,
+      description,
+      date,
+      place,
+      price,
+      actors,
+      imageUrl,
+    }
+    )
+    .pipe(switchMap(() => {
+    return this.performances;
+    }),
+    take(1),
+    tap((performances) => {
+    const updatedPerfIndex = performances.findIndex((p) => p.id === id);
+    const updatedPerformances = [...performances];
+    updatedPerformances[updatedPerfIndex] = new Performance(
+      id,
+      name,
+      description,
+      date,
+      place,
+      price,
+      actors,
+      imageUrl
+    );
+    this._performances.next(updatedPerformances);
+    })
+    );
   }
 
 }

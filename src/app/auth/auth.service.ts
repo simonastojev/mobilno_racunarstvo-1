@@ -37,17 +37,10 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   get isUserAuthenticated() {
-    return this._user.asObservable().pipe(
-      map((user) => {
-        if (user) {
-          return !!user.token;
-        } else {
-          return false;
-        }
-      })
-    );
+    return this._isUserAuthenticated;
   }
 
+  /*
   get userId() {
     return this._user.asObservable().pipe(
       map((user) => {
@@ -71,7 +64,7 @@ export class AuthService {
       })
     );
   }
-
+*/
 
   register(user: UserData) {
     this._isUserAuthenticated = true;
@@ -107,13 +100,13 @@ export class AuthService {
   addUser(user: UserData){
     if(user.email === 'admin@admin.com'){
       return this.http.post<{name: string}>(
-        'https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
+        'https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
           fullname: user.fullname, phoneNumber: user.phoneNumber,
           email: user.email, role: this.adminRole
       });
     }else{
       return this.http.post<{name: string}>(
-        'https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
+        'https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
           fullname: user.fullname, phoneNumber: user.phoneNumber,
           email: user.email, role: this.userRole
       });

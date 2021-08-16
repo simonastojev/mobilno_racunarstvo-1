@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: 'performances',
     loadChildren: () => import('./performances/performances.module').then( m => m.PerformancesPageModule),
-    canLoad: [AuthGuard]
+    //canLoad: [AuthGuard]
   },
   {
     path: '',
@@ -25,12 +25,12 @@ const routes: Routes = [
   {
     path: 'admin-profile',
     loadChildren: () => import('./admin-profile/admin-profile.module').then( m => m.AdminProfilePageModule),
-    canLoad: [AuthGuard]
+    //canLoad: [AuthGuard]
   },
   {
     path: 'admin-users',
     loadChildren: () => import('./admin-users/admin-users.module').then( m => m.AdminUsersPageModule),
-    canLoad: [AuthGuard]
+    //canLoad: [AuthGuard]
   },
   {
     path: 'welcome',

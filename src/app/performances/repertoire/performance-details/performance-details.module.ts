@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PerformanceDetailsPageRoutingModule } from './performance-details-routing.module';
 
 import { PerformanceDetailsPage } from './performance-details.page';
+import { PerformanceModalComponent } from '../../performance-modal/performance-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { PerformanceDetailsPage } from './performance-details.page';
     IonicModule,
     PerformanceDetailsPageRoutingModule
   ],
-  declarations: [PerformanceDetailsPage]
+  declarations: [PerformanceDetailsPage, PerformanceModalComponent],
+  entryComponents: [PerformanceModalComponent]
 })
 export class PerformanceDetailsPageModule {}
