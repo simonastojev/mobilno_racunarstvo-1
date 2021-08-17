@@ -126,7 +126,7 @@ export class PerformancesService {
 
   getPerformances() {
     return this.http.
-      get<{[key: string]: PerformanceData}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app//performances.json`)
+      get<{[key: string]: PerformanceData}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances.json`)
       .pipe(map((performanceData) => {
       const performances: Performance[] = [];
 

@@ -10,10 +10,12 @@
 <ion-content>
 
   <ion-list>
-    <ion-item *ngFor="let item of items">{{item}}
+    <!--<ion-item *ngFor="let item of items">-->
+      <ion-item *ngFor="let user of users">
       <ion-avatar slot="end">
         <ion-img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtF3o2PvqxOMHgdrpj_YRItsLBjxyTeNZu_Q&usqp=CAU"></ion-img>
       </ion-avatar>
+      <ion-label>{{user.fullname}}</ion-label>
     </ion-item>
   </ion-list>
 
