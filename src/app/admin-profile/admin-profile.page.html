@@ -3,44 +3,52 @@
     <ion-buttons slot="start">
       <ion-menu-button color="tertiary"></ion-menu-button>
     </ion-buttons>
-    <ion-title color="tertiary">Moj profil</ion-title>
-    <ion-buttons slot="primary">
-        <ion-label color="tertiary">{{ time | date: 'hh:mm:ss a' }}</ion-label>
-    </ion-buttons>
+    <ion-title color="tertiary">Kontakt</ion-title>
 
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content class="ion-text-center">
-      <ion-list lines="none">
-        <ion-item>
-          <ion-icon name="person-outline" slot="start"> </ion-icon>
-          <ion-label>Ime i prezime:</ion-label>
-        </ion-item>
+  <ion-card class="ion-no-margin">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-label color="secondary">{{ time | date: 'hh:mm:ss a' }}</ion-label>
+      </ion-card-title>
 
-        <ion-item>
-          <ion-icon name="receipt-outline" slot="start"> </ion-icon>
-          <ion-label>Broj predstava:</ion-label>
-          <ion-badge color="warning">33</ion-badge>
-        </ion-item>
+      <ion-card-title>
+        Kontaktirajte nas
+      </ion-card-title>
 
-        <ion-item>
-          <ion-icon name="cash-outline" slot="start"> </ion-icon>
-          <ion-label>Kredit:</ion-label>
-        </ion-item>
+      <ion-card-subtitle>
+        Biletarnica pozorišta Moje pozorište radi svakog dana od 16.00 do 20.00.
+        Karte za predstave možete rezervisati direktno sa repertoara ili pozivom na broj.
+      </ion-card-subtitle>
+    </ion-card-header>
 
-        <ion-item>
-          <ion-icon name="mail-outline" slot="start"> </ion-icon>
-          <ion-label>Mejl:</ion-label>
-          <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1">mojepozoriste@gmail.com</a>
-        </ion-item>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size-sm="4" offset-sm="4">
+              <ion-list lines="none">
+                <ion-item>
+                  <ion-icon name="pin" slot="start" color="secondary"></ion-icon>
+                  <ion-label>Kralja Milana 50, 11000 Beograd, Srbija</ion-label>
+                </ion-item>
 
-        <ion-item>
-          <ion-icon name="logo-whatsapp" slot="start"> </ion-icon>
-          <ion-label>Kontakt:</ion-label>
-          <a href="https://www.whatsapp.com/">062 032-333</a>
-        </ion-item>
+                <ion-item>
+                  <ion-icon name="call" slot="start" color="secondary"> </ion-icon>
+                  <ion-badge color="secondary">+381 11 3061 957</ion-badge>
+                </ion-item>
 
-      </ion-list>
+                <ion-item>
+                  <ion-icon name="mail" slot="start" color="secondary"> </ion-icon>
+                  <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1">mojepozoriste@gmail.com</a>
+                </ion-item>
+              </ion-list>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

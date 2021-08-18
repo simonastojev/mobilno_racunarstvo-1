@@ -12,10 +12,11 @@ const routes: Routes = [
     path: ':performanceId',
     loadChildren: () => import('./performance-details/performance-details.module').then( m => m.PerformanceDetailsPageModule)
   },
+  /*
   {
     path: 'performance-detail',
     loadChildren: () => import('./performance-details/performance-details.module').then( m => m.PerformanceDetailsPageModule)
-  },
+  },*/
 
 ];
 

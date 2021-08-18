@@ -1,8 +1,10 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-underscore-dangle */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { User } from '../auth/user.model';
 import { Users } from './users.model';
 
 
@@ -46,6 +48,21 @@ export class UsersService {
     }
       this._users.next(users);
       return users;
+    }));
+  }
+
+  getUser(id: string){
+    return this.http
+    .get<UserData>(
+    `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users/${id}.json`)
+    .pipe(map((resData: UserData) => {
+      return new Users(
+        id,
+        resData.fullname,
+        resData.phoneNumber,
+        resData.email,
+        resData.role
+      );
     }));
   }
 }

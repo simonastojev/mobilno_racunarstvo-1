@@ -15,53 +15,57 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="bg-color">
+  <ion-card class="ion-no-margin">
+    <ion-card-content>
 
-  <div class="ion-text-center" *ngIf="isLoading">
-    <ion-spinner color="primary"></ion-spinner>
-  </div>
+      <div class="ion-text-center" *ngIf="isLoading">
+        <ion-spinner color="primary"></ion-spinner>
+      </div>
 
-  <ion-card>
-  <ion-grid *ngIf="!isLoading" no-padding>
-      <ion-row>
-        <ion-col no-padding>
-          <ion-img [src]="performance.imageUrl"></ion-img>
-        </ion-col>
-      </ion-row>
+      <ion-card>
+        <ion-grid *ngIf="!isLoading" no-padding>
+            <ion-row>
+              <ion-col no-padding>
+                <ion-img [src]="performance.imageUrl"></ion-img>
+              </ion-col>
+            </ion-row>
 
-      <ion-row>
-        <ion-col class="ion-text-center">
-          <ion-icon name="calendar-number-outline"></ion-icon>
-          <ion-label text-center> {{performance.date}}</ion-label>
-        </ion-col>
-      </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <ion-icon name="calendar-number-outline"></ion-icon>
+                <ion-label text-center> {{performance.date}}</ion-label>
+              </ion-col>
+            </ion-row>
 
-      <ion-row>
-        <ion-col class="ion-text-center">
-          <ion-icon name="navigate-outline"></ion-icon>
-          <ion-label> {{performance.place}}</ion-label>
-        </ion-col>
-      </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <ion-icon name="navigate-outline"></ion-icon>
+                <ion-label> {{performance.place}}</ion-label>
+              </ion-col>
+            </ion-row>
 
-      <ion-row>
-        <ion-col class="ion-text-center">
-          <ion-icon name="pricetag-outline"></ion-icon>
-          <ion-label> {{performance.price}}</ion-label>
-        </ion-col>
-      </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <ion-icon name="pricetag-outline"></ion-icon>
+                <ion-label> {{performance.price}}</ion-label>
+              </ion-col>
+            </ion-row>
 
-      <ion-row>
-        <ion-col class="ion-text-center">
-          <h5>Igraju:</h5>
-        </ion-col>
-      </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <h5>Igraju:</h5>
+              </ion-col>
+            </ion-row>
 
-      <ion-row>
-        <ion-col class="ion-text-center">
-              {{performance.actors}}
-        </ion-col>
-      </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-center">
+                    {{performance.actors}}
+              </ion-col>
+            </ion-row>
 
-    </ion-grid>
+          </ion-grid>
+      </ion-card>
+    </ion-card-content>
   </ion-card>
 </ion-content>

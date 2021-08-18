@@ -1,0 +1,21 @@
+ion-img{
+  height: 80%;
+  width: 80%;
+  margin: auto;
+  display: block;
+}
+
+ion-card-content{
+  padding-top: 20px;
+}
+
+ion-card{
+  --ion-background-color: transparent;
+  box-shadow: none !important;
+}
+
+ion-icon, ion-label, h5, ion-col{
+  color: black;
+  font-weight: 400;
+}
+

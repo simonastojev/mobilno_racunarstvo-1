@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-menu side="start" contentId="main">
+  <ion-menu side="start" contentId="main" menuId="adminMenu" *ngIf="authService.currentUser?.email==='admin@admin.com'">
     <ion-header>
       <ion-toolbar>
         <ion-title color="tertiary">Moje Pozorište</ion-title>
@@ -11,7 +11,7 @@
         <ion-menu-toggle>
           <ion-item routerLink="/admin-profile">
             <ion-icon name="person-circle" slot="start" color="secondary"></ion-icon>
-            <ion-label>Moj profil</ion-label>
+            <ion-label>Kontakt</ion-label>
           </ion-item>
         </ion-menu-toggle>
 

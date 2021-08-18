@@ -11,11 +11,11 @@
 
   <ion-list>
     <!--<ion-item *ngFor="let item of items">-->
-      <ion-item *ngFor="let user of users">
+      <ion-item *ngFor="let user of users" [routerLink]="['', 'admin-users', user.id]">
       <ion-avatar slot="end">
-        <ion-img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtF3o2PvqxOMHgdrpj_YRItsLBjxyTeNZu_Q&usqp=CAU"></ion-img>
+        <ion-img src="https://upload.wikimedia.org/wikipedia/commons/6/67/User_Avatar.png"></ion-img>
       </ion-avatar>
-      <ion-label>{{user.fullname}}</ion-label>
+      <ion-label>{{user.email}}</ion-label>
     </ion-item>
   </ion-list>
 

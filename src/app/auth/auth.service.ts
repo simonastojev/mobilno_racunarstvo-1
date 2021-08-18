@@ -29,6 +29,7 @@ interface UserData {
   providedIn: 'root'
 })
 export class AuthService {
+  public currentUser = null;
   private userRole = 'user';
   private adminRole = 'admin';
   private _isUserAuthenticated = false;
@@ -37,10 +38,18 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   get isUserAuthenticated() {
-    return this._isUserAuthenticated;
+    //return this._isUserAuthenticated;
+    return this._user.asObservable().pipe(
+      map((user) => {
+        if (user) {
+          return !!user.token;
+        } else {
+          return false;
+        }
+      })
+    );
   }
 
-  /*
   get userId() {
     return this._user.asObservable().pipe(
       map((user) => {
@@ -64,7 +73,6 @@ export class AuthService {
       })
     );
   }
-*/
 
   register(user: UserData) {
     this._isUserAuthenticated = true;
@@ -74,7 +82,10 @@ export class AuthService {
         tap((userData) => {
           const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
           const newUser = new User(userData.localId, userData.email, userData.idToken, expirationTime);
+          this.currentUser = newUser;
+          console.log('current user: ' + this.currentUser.role);
           this._user.next(newUser);
+          console.log('user' + this._user);
         })
       );
   }
@@ -88,6 +99,8 @@ export class AuthService {
             tap((userData) => {
               const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
               const newUser = new User(userData.localId, userData.email, userData.idToken, expirationTime);
+              this.currentUser = newUser;
+              console.log('current user: ' + this.currentUser.email);
               this._user.next(newUser);
             })
         );
