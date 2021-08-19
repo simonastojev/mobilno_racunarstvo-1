@@ -125,7 +125,7 @@ export class PerformanceDetailsPage implements OnInit {
 
   failedAlert() {
     this.alertCtrl.create({
-    message: 'Morate da unesete broj karata',
+    message: 'Morate da unesete ispravan broj karata',
     buttons: [{
     text: 'OK',
       handler: () => {
@@ -154,7 +154,7 @@ export class PerformanceDetailsPage implements OnInit {
         }, {
           text: 'Rezerviši',
           handler: (alertData) => {
-            if(alertData.numberOfTickets === '') {
+            if(alertData.numberOfTickets === '' || alertData.numberOfTickets <= 0) {
               this.failedAlert();
               } else {
                 this.userReservationsService.reserveTickets(this.performance, alertData.numberOfTickets).subscribe(() => {
