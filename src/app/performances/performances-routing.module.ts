@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: () => import('./add-new/add-new.module').then( m => m.AddNewPageModule)
       },
       {
+        path: 'reservations',
+        loadChildren: () => import('./reservations/reservations.module').then( m => m.ReservationsPageModule)
+      },
+      {
         path: '',
         redirectTo: '/performances/tabs/repertoire',
         pathMatch: 'full'
@@ -27,6 +31,10 @@ const routes: Routes = [
     path: '',
     redirectTo: '/performances/tabs/repertoire',
     pathMatch: 'full'
+  },
+  {
+    path: 'reservations',
+    loadChildren: () => import('./reservations/reservations.module').then( m => m.ReservationsPageModule)
   },
 
 

@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-trailing-spaces */
 import { Component, OnInit } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, NavController } from '@ionic/angular';
+import { AuthService } from 'src/app/auth/auth.service';
 import { PerformanceModalComponent } from '../../performance-modal/performance-modal.component';
 import { Performance } from '../../performance.model';
 import { PerformancesService } from '../../performances.service';
+import { UserReservationsService } from '../../user-reservations.service';
 
 @Component({
   selector: 'app-performance-details',
@@ -15,6 +19,8 @@ export class PerformanceDetailsPage implements OnInit {
 
   performance: Performance;
   isLoading = false;
+  itemExpanded: boolean = false;
+  itemExpandedHeight: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,7 +29,9 @@ export class PerformanceDetailsPage implements OnInit {
     private alertCtrl: AlertController,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
-    private loadingCtrl: LoadingController) { }
+    private loadingCtrl: LoadingController,
+    public authService: AuthService,
+    private userReservationsService: UserReservationsService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -42,6 +50,11 @@ export class PerformanceDetailsPage implements OnInit {
         });
     });
     console.log(this.performance);
+  }
+
+  expandItem() {
+    this.itemExpanded = !this.itemExpanded;
+    console.log(this.itemExpanded);
   }
 
   onDeletePerformance(){
@@ -106,6 +119,52 @@ export class PerformanceDetailsPage implements OnInit {
                 });
             });
         }
+      });
+  }
+
+  failedAlert() {
+    this.alertCtrl.create({
+    message: 'Morate da unesete broj karata',
+    buttons: [{
+    text: 'OK',
+      handler: () => {
+        this.onReserve();
+      }
+    }]
+
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
+  onReserve(){
+    this.alertCtrl.create({header: 'Rezervacija',
+        message: 'Koliko karate želite da rezervišete?',
+        inputs: [
+          {
+            name: 'numberOfTickets',
+            type: 'number',
+            placeholder: 'Broj karata',
+          }
+        ],
+        buttons: [{
+          text: 'Odustani',
+          role: 'cancel'
+        }, {
+          text: 'Rezerviši',
+          handler: (alertData) => {
+            if(alertData.numberOfTickets === '') {
+              this.failedAlert();
+              } else {
+                this.userReservationsService.reserveTickets(this.performance, alertData.numberOfTickets).subscribe(() => {
+                  this.navCtrl.navigateBack('/performances/tabs/reservations');
+                });
+            }
+          }
+        }]
+
+      }).then(alertEl => {
+        alertEl.present();
       });
   }
 

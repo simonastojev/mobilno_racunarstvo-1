@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="tertiary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="tertiary">Moje rezervacije</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngFor="let userReservation of userReservations">
+    <ion-item>
+      <ion-avatar slot="start">
+        <ion-img [src]="userReservation.performance.imageUrl"></ion-img>
+      </ion-avatar>
+      <ion-label>{{userReservation.performance.name}} - {{userReservation.numberOfTickets}} karte</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

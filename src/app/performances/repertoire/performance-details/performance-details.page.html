@@ -5,11 +5,14 @@
     </ion-buttons>
 
     <ion-buttons slot="primary">
-      <ion-button (click)="onEditPerformance()">
+      <ion-button (click)="onEditPerformance()" *ngIf="authService.currentUser?.email==='admin@admin.com'">
         <ion-icon name="pencil" slot="icon-only" color="tertiary"></ion-icon>
       </ion-button>
-      <ion-button (click)="onDeletePerformance()">
+      <ion-button (click)="onDeletePerformance()" *ngIf="authService.currentUser?.email==='admin@admin.com'">
         <ion-icon name="trash" slot="icon-only" color="tertiary"></ion-icon>
+      </ion-button>
+      <ion-button (click)="onReserve()" *ngIf="authService.currentUser?.email!=='admin@admin.com'">
+        <ion-label class="reservation">Rezerviši</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -33,21 +36,21 @@
 
             <ion-row>
               <ion-col class="ion-text-center">
-                <ion-icon name="calendar-number-outline"></ion-icon>
-                <ion-label text-center> {{performance.date}}</ion-label>
+                <ion-icon name="calendar-number"></ion-icon>
+                <ion-label text-center> {{performance.date | date: 'dd.MM.yyyy HH:mm'}}</ion-label>
               </ion-col>
             </ion-row>
 
             <ion-row>
               <ion-col class="ion-text-center">
-                <ion-icon name="navigate-outline"></ion-icon>
+                <ion-icon name="navigate"></ion-icon>
                 <ion-label> {{performance.place}}</ion-label>
               </ion-col>
             </ion-row>
 
             <ion-row>
               <ion-col class="ion-text-center">
-                <ion-icon name="pricetag-outline"></ion-icon>
+                <ion-icon name="pricetag"></ion-icon>
                 <ion-label> {{performance.price}}</ion-label>
               </ion-col>
             </ion-row>
@@ -61,6 +64,17 @@
             <ion-row>
               <ion-col class="ion-text-center">
                     {{performance.actors}}
+              </ion-col>
+            </ion-row>
+
+
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <button (click)="expandItem()">
+                  <ion-icon name="arrow-forward"></ion-icon>
+                  <ion-label>Kratak opis radnje</ion-label>
+                  <app-description [expandHeight]="itemExpandedHeight" [expanded]="itemExpanded">{{performance.description}}</app-description>
+                </button>
               </ion-col>
             </ion-row>
 

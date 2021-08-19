@@ -5,9 +5,14 @@
       <ion-label>Repertoar</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="add-new">
+    <ion-tab-button tab="add-new" *ngIf="authService.currentUser?.email==='admin@admin.com'">
       <ion-icon name="add-circle"></ion-icon>
       <ion-label>Dodaj novu predstavu</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="reservations" *ngIf="authService.currentUser?.email!=='admin@admin.com'">
+      <ion-icon name="ticket"></ion-icon>
+      <ion-label>Moje rezervacije</ion-label>
     </ion-tab-button>
 
   </ion-tab-bar>

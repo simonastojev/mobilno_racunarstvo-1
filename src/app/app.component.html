@@ -39,6 +39,39 @@
     </ion-content>
   </ion-menu>
 
+  <ion-menu side="start" contentId="main" menuId="userMenu" *ngIf="authService.currentUser?.email!=='admin@admin.com'">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title color="tertiary">Moje Pozorište</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list lines="none">
+
+        <ion-menu-toggle>
+          <ion-item routerLink="/performances">
+            <ion-icon name="document-text" slot="start" color="secondary"></ion-icon>
+            <ion-label>Repertoar</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle>
+          <ion-item routerLink="/admin-profile">
+            <ion-icon name="person-circle" slot="start" color="secondary"></ion-icon>
+            <ion-label>Kontakt</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle>
+          <ion-item (click)="onLogOut()">
+            <ion-icon name="log-out" slot="start" color="secondary"></ion-icon>
+            <ion-label>Odjavi se</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
   <ion-router-outlet id="main"></ion-router-outlet>
 
 

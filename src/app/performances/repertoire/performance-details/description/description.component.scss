@@ -1,0 +1,12 @@
+.expand-wrapper{
+    height: 0;
+    color:white;
+    transition: 0.5 linear;
+}
+
+.expanded{
+    height: 300px;
+    color: black;
+    margin-top: 10px;
+}
+

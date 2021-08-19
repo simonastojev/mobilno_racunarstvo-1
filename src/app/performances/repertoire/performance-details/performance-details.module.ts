@@ -8,15 +8,16 @@ import { PerformanceDetailsPageRoutingModule } from './performance-details-routi
 
 import { PerformanceDetailsPage } from './performance-details.page';
 import { PerformanceModalComponent } from '../../performance-modal/performance-modal.component';
+import { DescriptionComponent } from './description/description.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PerformanceDetailsPageRoutingModule
+    PerformanceDetailsPageRoutingModule,
   ],
-  declarations: [PerformanceDetailsPage, PerformanceModalComponent],
+  declarations: [PerformanceDetailsPage, PerformanceModalComponent, DescriptionComponent],
   entryComponents: [PerformanceModalComponent]
 })
 export class PerformanceDetailsPageModule {}
