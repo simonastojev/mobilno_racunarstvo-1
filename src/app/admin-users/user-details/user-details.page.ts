@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { UserReservationsService } from 'src/app/performances/user-reservations.service';
+import { UserReservation } from 'src/app/performances/userReservation.model';
 import { Users } from '../users.model';
 import { UsersService } from '../users.service';
 
@@ -9,15 +13,17 @@ import { UsersService } from '../users.service';
   templateUrl: './user-details.page.html',
   styleUrls: ['./user-details.page.scss'],
 })
-export class UserDetailsPage implements OnInit {
+export class UserDetailsPage implements OnInit{
 
   user: Users;
   isLoading = false;
+  private userSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private usersService: UsersService,
-    private navCtrl: NavController) { }
+    private navCtrl: NavController,
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -35,7 +41,6 @@ export class UserDetailsPage implements OnInit {
           this.isLoading = false;
         });
     });
-    console.log(this.user);
   }
 
 }

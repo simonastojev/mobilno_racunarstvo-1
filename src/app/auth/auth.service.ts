@@ -22,7 +22,6 @@ interface UserData {
   email: string;
   password: string;
   role: string;
-
 }
 
 @Injectable({

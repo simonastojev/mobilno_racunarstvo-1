@@ -1,6 +1,8 @@
 /* eslint-disable no-trailing-spaces */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from 'src/app/auth/user.model';
 import { PerformancesService } from '../performances.service';
 import { UserReservationsService } from '../user-reservations.service';
 import { UserReservation } from '../userReservation.model';
@@ -14,10 +16,14 @@ export class ReservationsPage implements OnInit, OnDestroy {
 
   userReservations: UserReservation[];
   performance: Performance;
+  user: User;
   private sub: Subscription;
 
   constructor(private userReservationsService: UserReservationsService,
-              private performancesService: PerformancesService) { }
+              private performancesService: PerformancesService,
+              private authService: AuthService) {
+                this.user = authService.currentUser;
+               }
 
   ngOnInit() {
     this.sub = this.userReservationsService.userReservations.subscribe(userReservations => {
@@ -26,7 +32,7 @@ export class ReservationsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.userReservationsService.getReservations().subscribe(userReservations => {
+    this.userReservationsService.getReservations(this.user.email).subscribe(userReservations => {
     });
   }
 

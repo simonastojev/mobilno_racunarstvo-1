@@ -3,7 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController, ModalController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/auth/auth.service';
 import { PerformanceModalComponent } from '../../performance-modal/performance-modal.component';
 import { Performance } from '../../performance.model';
@@ -31,7 +31,8 @@ export class PerformanceDetailsPage implements OnInit {
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     public authService: AuthService,
-    private userReservationsService: UserReservationsService) { }
+    private userReservationsService: UserReservationsService,
+    private toastCtrl: ToastController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -158,6 +159,7 @@ export class PerformanceDetailsPage implements OnInit {
               } else {
                 this.userReservationsService.reserveTickets(this.performance, alertData.numberOfTickets).subscribe(() => {
                   this.navCtrl.navigateBack('/performances/tabs/reservations');
+                  this.reserve(this.performance.name);
                 });
             }
           }
@@ -166,6 +168,14 @@ export class PerformanceDetailsPage implements OnInit {
       }).then(alertEl => {
         alertEl.present();
       });
+  }
+
+  async reserve(name: string) {
+    const toast = await this.toastCtrl.create({
+      message: `Uspešno ste rezervisali karte za predstavu ${name}. Možete ih preuzeti najkasnije pola sata do početka predstave!`,
+      duration: 7000,
+    });
+    toast.present();
   }
 
 }

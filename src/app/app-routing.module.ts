@@ -23,8 +23,8 @@ const routes: Routes = [
     loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
   },
   {
-    path: 'admin-profile',
-    loadChildren: () => import('./admin-profile/admin-profile.module').then( m => m.AdminProfilePageModule),
+    path: 'contact',
+    loadChildren: () => import('./contact/contact.module').then( m => m.ContactPageModule),
     canLoad: [AuthGuard]
   },
   {
@@ -35,6 +35,11 @@ const routes: Routes = [
   {
     path: 'welcome',
     loadChildren: () => import('./auth/welcome/welcome.module').then( m => m.WelcomePageModule)
+  },
+  {
+    path: 'admin-reservations',
+    loadChildren: () => import('./admin-reservations/admin-reservations.module').then( m => m.AdminReservationsPageModule),
+    canLoad: [AuthGuard]
   },
 
 ];

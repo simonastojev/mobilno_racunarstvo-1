@@ -5,7 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
+import { Users } from '../admin-users/users.model';
 import { AuthService } from '../auth/auth.service';
+import { User } from '../auth/user.model';
 import { Performance } from './performance.model';
 import { UserReservation } from './userReservation.model';
 
@@ -21,6 +23,7 @@ interface UserReservationData {
 export class UserReservationsService {
 
   private _userReservations = new BehaviorSubject<UserReservation[]>([]);
+  private _allReservations = new BehaviorSubject<UserReservation[]>([]);
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -28,8 +31,11 @@ export class UserReservationsService {
     return this._userReservations.asObservable();
   }
 
-  getReservations() {
-    const userId = this.authService.currentUser.id;
+  get allReservations() {
+    return this._allReservations.asObservable();
+  }
+
+  getReservations(userId: string) {
     return this.http.
       get<{[key: string]: UserReservationData}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/reservations.json`)
       .pipe(map((reservationData) => {
@@ -53,7 +59,7 @@ export class UserReservationsService {
 
   reserveTickets(performance: Performance, numberOfTickets: number){
     let generatedId;
-    const userId = this.authService.currentUser.id;
+    const userId = this.authService.currentUser.email;
     return this.http.post<{name: string}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/reservations.json`,
       {
         userId,
@@ -73,5 +79,27 @@ export class UserReservationsService {
         }));
       })
     );
+  }
+
+  getAllReservations() {
+    return this.http.
+      get<{[key: string]: UserReservationData}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/reservations.json`)
+      .pipe(map((reservationData) => {
+      const allReservations: UserReservation[] = [];
+
+      for(const key in reservationData){
+
+      if(reservationData.hasOwnProperty(key)){
+        allReservations.push({
+          id: key,
+          userId: reservationData[key].userId,
+          performance: reservationData[key].performance,
+          numberOfTickets: reservationData[key].numberOfTickets,
+        });
+      }
+    }
+    this._allReservations.next(allReservations);
+    return allReservations;
+  }));
   }
 }

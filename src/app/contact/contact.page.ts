@@ -3,11 +3,11 @@ import { Subscription, timer } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-admin-profile',
-  templateUrl: './admin-profile.page.html',
-  styleUrls: ['./admin-profile.page.scss'],
+  selector: 'app-contact',
+  templateUrl: './contact.page.html',
+  styleUrls: ['./contact.page.scss'],
 })
-export class AdminProfilePage implements OnInit, OnDestroy {
+export class ContactPage implements OnInit, OnDestroy {
 
   time = new Date();
   rxTime = new Date();

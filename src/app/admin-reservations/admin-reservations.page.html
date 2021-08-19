@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="tertiary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="tertiary">Rezervacije</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngFor="let allReservation of allReservations">
+    <ion-item>
+      <ion-avatar slot="start">
+        <ion-img [src]="allReservation.performance.imageUrl"></ion-img>
+      </ion-avatar>
+      <ion-label>{{allReservation.performance.name}} - {{allReservation.numberOfTickets}} karte</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
