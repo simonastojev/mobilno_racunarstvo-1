@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -30,7 +30,8 @@ export class LogInPage implements OnInit {
               private authService: AuthService,
               private loadingCtl: LoadingController,
               private router: Router,
-              private nav: NavController) { }
+              private nav: NavController,
+              private alertCtrl: AlertController) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -49,14 +50,33 @@ export class LogInPage implements OnInit {
     this.isLoading = true;
     if(this.loginForm.valid){
       this.authService.logIn(this.loginForm.value).subscribe(resData => {
-        console.log('Prijava uspešna');
-        console.log(resData);
         this.isLoading = false;
         this.router.navigateByUrl('/performances');
+
+      },
+      errRes => {
+        console.log(errRes);
+        this.isLoading = false;
+        let message = 'Pogrešan email ili lozinka';
+
+        const code = errRes.error.error.message;
+        if (code === 'EMAIL_NOT_FOUND') {
+          message = 'Email adresa je nepostojeća.';
+        } else if (code === 'INVALID_PASSWORD') {
+          message = 'Pogrešna lozinka.';
+        }
+
+        this.alertCtrl.create({
+          header: 'Greška',
+          message,
+          buttons: ['OK']
+        }).then((alert) => {
+          alert.present();
+        });
+
+        this.loginForm.reset();
       });
-
     }
-
   }
 
   goToRegisterPage(){

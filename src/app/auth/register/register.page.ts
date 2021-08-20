@@ -1,8 +1,9 @@
+/* eslint-disable no-trailing-spaces */
 import { Route } from '@angular/compiler/src/core';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -38,7 +39,8 @@ export class RegisterPage implements OnInit {
   constructor(public formBuilder: FormBuilder,
               private authService: AuthService,
               private loadingCtl: LoadingController,
-              private router: Router) { }
+              private router: Router,
+              private alertCtrl: AlertController) { }
 
 
   ngOnInit() {
@@ -74,9 +76,26 @@ export class RegisterPage implements OnInit {
           });
           loadingEl.dismiss();
           this.router.navigateByUrl('/performances');
-        });
+        }, errRes => {
+          console.log(errRes);
+          loadingEl.dismiss();
+          let message = 'Greška prilikom registracije';
+
+          const code = errRes.error.error.message;
+          if (code === 'EMAIL_EXISTS') {
+            message = 'Korisnik sa ovom email adresom već postoji.';
+          }
+
+          this.alertCtrl.create({
+            header: 'Greška',
+            message,
+            buttons: ['OK']
+          }).then((alert) => {
+            alert.present();
+          });
+
+          this.registerForm.reset();
+      });
     });
-
   }
-
 }
