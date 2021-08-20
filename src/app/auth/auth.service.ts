@@ -37,7 +37,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   get isUserAuthenticated() {
-    //return this._isUserAuthenticated;
+
     return this._user.asObservable().pipe(
       map((user) => {
         if (user) {

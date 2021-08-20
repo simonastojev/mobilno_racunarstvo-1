@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-underscore-dangle */
@@ -61,128 +62,72 @@ export class PerformancesService {
 
   addPerformance(name: string, description: string, date: Date, place: string, price: number, actors: string, imageUrl: string) {
     let generatedId;
+    let newPerformance: Performance;
 
-    return this.http.post<{name: string}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances.json`,
-      { name,
-        description,
-        date,
-        place,
-        price,
-        actors,
-        imageUrl,
-      }).pipe(switchMap((resData) => {
-
-        generatedId = resData.name;
-        return this.performances;
-
-      }), take(1), tap(performances => {
-        this._performances.next(performances.concat({
-          id: generatedId,
+    return this.authService.token.pipe(
+      take(1),
+      switchMap((token) => {
+        newPerformance = new Performance(
+          null,
           name,
           description,
           date,
           place,
           price,
           actors,
-          imageUrl,
-        }));
-      })
-    );
-
-    /*
-    let newPerformance: Performance;
-
-    return this.authService.userId.pipe(
-      take(1),
-      switchMap(userId => {
-        newPerformance = new Performance(
-          null,
-          name,
-          date,
-          place,
-          price,
-          actors,
-          imageUrl,
-          userId
+          imageUrl
         );
         return this.http.post<{name: string}>(
-          'https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/performances.json', newPerformance);
-      }),
-      take(1),
-      switchMap((resData) => {
-        generatedId = resData.name;
-        return this.performances;
-      }),
-      take(1),
-      tap((performances) => {
-        newPerformance.id = generatedId;
-        this._performances.next(performances.concat(newPerformance));
-      })
+          `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances.json?auth=${token}`, newPerformance);
+        }),
+        take(1),
+        switchMap((resData) => {
+          generatedId = resData.name;
+          return this.performances;
+        }),
+        take(1),
+        tap((performances) => {
+          newPerformance.id = generatedId;
+          this._performances.next(performances.concat(newPerformance));
+        })
     );
-    */
-
-
   }
 
   getPerformances() {
-    return this.http.
-      get<{[key: string]: PerformanceData}>(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances.json`)
-      .pipe(map((performanceData) => {
-      const performances: Performance[] = [];
-
-      for(const key in performanceData){
-      if(performanceData.hasOwnProperty(key)){
-        performances.push({
-          id: key,
-          name: performanceData[key].name,
-          description: performanceData[key].description,
-          date: performanceData[key].date,
-          place: performanceData[key].place,
-          price: performanceData[key].price,
-          actors: performanceData[key].actors,
-          imageUrl: performanceData[key].imageUrl,
-        });
-      }
-    }
-    this._performances.next(performances);
-    return performances;
-  }));
-    /*
     return this.authService.token.pipe(
       take(1),
-      switchMap((token) => this.http
-          .get<{ [key: string]: PerformanceData }>(
-            `https://performances-app-default-rtdb.europe-west1.firebasedatabase.app/performances.json?auth=${token}`
-          )),
-      map((performancesData) => {
-        const performances: Performance[] = [];
-        for (const key in performancesData) {
-          if (performancesData.hasOwnProperty(key)) {
-            performances.push(new Performance(key, performancesData[key].name,
-                                        performancesData[key].date,
-                                        performancesData[key].place,
-                                        performancesData[key].price,
-                                        performancesData[key].actors,
-                                        performancesData[key].imageUrl,
-                                        performancesData[key].userId)
+      switchMap((token) => {
+        return this.http.
+          get<{[key: string]: PerformanceData}>(
+            `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances.json?auth=${token}`
             );
+          }),
+          map((performanceData: any) => {
+            const performances: Performance[] = [];
+
+          for(const key in performanceData){
+            if(performanceData.hasOwnProperty(key)){
+              performances.push(new Performance(key, performanceData[key].name, performanceData[key].description, performanceData[key].date, performanceData[key].place, performanceData[key].price, performanceData[key].actors, performanceData[key].imageUrl)
+              );
+            }
           }
-        }
         return performances;
       }),
       tap(performances => {
         this._performances.next(performances);
-      })
-    );
-    */
+      }));
   }
 
 
   getPerformance(id: string){
-    return this.http
-    .get<PerformanceData>(
-    `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json`)
-    .pipe(map((resData: PerformanceData) => {
+    return this.authService.token.pipe(
+      take(1),
+      switchMap((token) => {
+        return this.http.get<PerformanceData>(
+          `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json?auth=${token}`
+        );
+      }),
+      map((resData: PerformanceData) => {
       return new Performance(
         id,
         resData.name,
@@ -198,9 +143,14 @@ export class PerformancesService {
 
 
   deletePerformance(id: string){
-    return this.http.delete(
-      `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json`)
-    .pipe(switchMap(() => {
+    return this.authService.token.pipe(
+      take(1),
+      switchMap((token) => {
+        return this.http.delete(
+          `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json?auth=${token}`
+        );
+      }),
+      switchMap(() => {
       return this.performances;
     }),
     take(1),
@@ -221,37 +171,40 @@ export class PerformancesService {
     imageUrl: string
     )
     {
-    return this.http
-    .put(`https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json`,
-    {
-      name,
-      description,
-      date,
-      place,
-      price,
-      actors,
-      imageUrl,
-    }
-    )
-    .pipe(switchMap(() => {
-    return this.performances;
-    }),
-    take(1),
-    tap((performances) => {
-    const updatedPerfIndex = performances.findIndex((p) => p.id === id);
-    const updatedPerformances = [...performances];
-    updatedPerformances[updatedPerfIndex] = new Performance(
-      id,
-      name,
-      description,
-      date,
-      place,
-      price,
-      actors,
-      imageUrl
-    );
-    this._performances.next(updatedPerformances);
-    })
+      return this.authService.token.pipe(
+        take(1),
+        switchMap((token) => {
+          return this.http.put(
+            `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/performances/${id}.json?auth=${token}`,
+          {
+            name,
+            description,
+            date,
+            place,
+            price,
+            actors,
+            imageUrl,
+          }
+        );
+      }), switchMap(() => {
+          return this.performances;
+      }),
+      take(1),
+      tap((performances) => {
+      const updatedPerfIndex = performances.findIndex((p) => p.id === id);
+      const updatedPerformances = [...performances];
+      updatedPerformances[updatedPerfIndex] = new Performance(
+        id,
+        name,
+        description,
+        date,
+        place,
+        price,
+        actors,
+        imageUrl
+      );
+      this._performances.next(updatedPerformances);
+      })
     );
   }
 

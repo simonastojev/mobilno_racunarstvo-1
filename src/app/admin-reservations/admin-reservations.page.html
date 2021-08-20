@@ -13,7 +13,7 @@
       <ion-avatar slot="start">
         <ion-img [src]="allReservation.performance.imageUrl"></ion-img>
       </ion-avatar>
-      <ion-label>{{allReservation.performance.name}} - {{allReservation.numberOfTickets}} karte</ion-label>
+      <ion-label  class="ion-text-wrap">{{allReservation.performance.name}} - {{allReservation.userId}} ({{allReservation.numberOfTickets}})</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -106,8 +106,12 @@
           </ion-row>
         </ion-grid>
 
+        <div class="ion-text-center">
+          <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner>
+        </div>
+
         <div class="sign-btn-wrap">
-          <ion-button  type="submit" shape="round" fill="solid" class="sign-btn" [disabled]="!loginForm.valid">Uloguj se</ion-button>
+          <ion-button  type="submit" shape="round" fill="solid" class="sign-btn" [disabled]="!loginForm.valid" *ngIf="!isLoading">Uloguj se</ion-button>
         </div>
 
       </form>
