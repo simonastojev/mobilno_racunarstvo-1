@@ -1,5 +1,7 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable no-trailing-spaces */
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +20,8 @@ import { UserReservationsService } from '../../user-reservations.service';
 export class PerformanceDetailsPage implements OnInit {
 
   performance: Performance;
+  date: Date;
+  currentDate: Date = new Date();
   isLoading = false;
   itemExpanded: boolean = false;
   itemExpandedHeight: number = 0;
@@ -50,7 +54,7 @@ export class PerformanceDetailsPage implements OnInit {
           this.isLoading = false;
         });
     });
-    console.log(this.performance);
+
   }
 
   expandItem() {
@@ -123,9 +127,9 @@ export class PerformanceDetailsPage implements OnInit {
       });
   }
 
-  failedAlert() {
+  failedAlert(message: string) {
     this.alertCtrl.create({
-    message: 'Morate da unesete ispravan broj karata',
+    message,
     buttons: [{
     text: 'OK',
       handler: () => {
@@ -139,41 +143,47 @@ export class PerformanceDetailsPage implements OnInit {
   }
 
   onReserve(){
-    this.alertCtrl.create({header: 'Rezervacija',
-        message: 'Koliko karate želite da rezervišete?',
-        inputs: [
-          {
-            name: 'numberOfTickets',
-            type: 'number',
-            placeholder: 'Broj karata',
+    this.date = new Date(this.performance.date);
+    console.log('date:' + this.date);
+    console.log('current date: ' + this.currentDate);
+    if(this.date < this.currentDate){
+      this.toastMessage(`Nije moguće rezervisati karte. Predstava ${this.performance.name} je već odigrana.`);
+    }else{
+      this.alertCtrl.create({header: 'Rezervacija',
+      message: 'Koliko karate želite da rezervišete?',
+      inputs: [
+        {
+          name: 'numberOfTickets',
+          type: 'number',
+          placeholder: 'Broj karata',
+        }
+      ],
+      buttons: [{
+        text: 'Odustani',
+        role: 'cancel'
+      }, {
+        text: 'Rezerviši',
+        handler: (alertData) => {
+          if(alertData.numberOfTickets === '' || alertData.numberOfTickets <= 0) {
+            this.failedAlert('Morate da unesete ispravan broj karata');
+            } else {
+              this.userReservationsService.reserveTickets(this.performance, alertData.numberOfTickets).subscribe(() => {
+                this.navCtrl.navigateBack('/performances/tabs/reservations');
+                this.toastMessage(`Uspešno ste rezervisali karte za predstavu ${this.performance.name}. Možete ih preuzeti najkasnije pola sata do početka predstave!`);
+              });
           }
-        ],
-        buttons: [{
-          text: 'Odustani',
-          role: 'cancel'
-        }, {
-          text: 'Rezerviši',
-          handler: (alertData) => {
-            if(alertData.numberOfTickets === '' || alertData.numberOfTickets <= 0) {
-              this.failedAlert();
-              } else {
-                this.userReservationsService.reserveTickets(this.performance, alertData.numberOfTickets).subscribe(() => {
-                  this.navCtrl.navigateBack('/performances/tabs/reservations');
-                  this.reserve(this.performance.name);
-                });
-            }
-          }
-        }]
-
+        }
+      }]
       }).then(alertEl => {
         alertEl.present();
       });
+    }
   }
 
-  async reserve(name: string) {
+  async toastMessage(message: string) {
     const toast = await this.toastCtrl.create({
-      message: `Uspešno ste rezervisali karte za predstavu ${name}. Možete ih preuzeti najkasnije pola sata do početka predstave!`,
-      duration: 7000,
+      message,
+      duration: 5000,
     });
     toast.present();
   }

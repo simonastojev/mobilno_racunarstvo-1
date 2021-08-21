@@ -17,7 +17,6 @@ export class AdminReservationsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.reservationSub = this.userReservationsService.allReservations.subscribe(allReservations => {
-      console.log(allReservations);
       this.allReservations = allReservations;
     });
   }

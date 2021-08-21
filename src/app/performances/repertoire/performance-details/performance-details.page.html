@@ -15,6 +15,7 @@
         <ion-label class="reservation">Rezerviši</ion-label>
       </ion-button>
     </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -31,6 +32,12 @@
             <ion-row>
               <ion-col no-padding>
                 <ion-img [src]="performance.imageUrl"></ion-img>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <ion-label text-center>{{performance.name}}</ion-label>
               </ion-col>
             </ion-row>
 

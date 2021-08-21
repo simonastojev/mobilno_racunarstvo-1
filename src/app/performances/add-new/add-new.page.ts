@@ -14,6 +14,7 @@ import { PerformancesService } from '../performances.service';
 })
 export class AddNewPage implements OnInit {
 
+
   validationMessage = {
     name: [
       {type: 'required', message:'Unesite naziv predstave'},
