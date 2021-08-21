@@ -2,8 +2,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Users } from '../admin-users/users.model';
 import { User } from './user.model';
 
 interface AuthResponseData {
@@ -33,8 +34,13 @@ export class AuthService {
   private adminRole = 'admin';
   private _isUserAuthenticated = false;
   private _user = new BehaviorSubject<User>(null);
+  private _users = new BehaviorSubject<Users[]>([]);
 
   constructor(private http: HttpClient) { }
+
+  get users() {
+    return this._users.asObservable();
+  }
 
   get isUserAuthenticated() {
 
@@ -109,19 +115,77 @@ export class AuthService {
     this._user.next(null);
   }
 
-  addUser(user: UserData){
+  addNewUser(user: UserData){
     if(user.email === 'admin@admin.com'){
-      return this.http.post<{name: string}>(
-        'https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
-          fullname: user.fullname, phoneNumber: user.phoneNumber,
-          email: user.email, role: this.adminRole
+      this.addAdmin(user).subscribe(admin =>{
+        //console.log(admin);
       });
     }else{
-      return this.http.post<{name: string}>(
-        'https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
-          fullname: user.fullname, phoneNumber: user.phoneNumber,
-          email: user.email, role: this.userRole
+      this.addUser(user).subscribe(res =>{
+        //console.log(res);
       });
     }
+  }
+
+  addAdmin(user: UserData){
+
+    let generatedId;
+    let admin: Users;
+
+    return this.token.pipe(
+      take(1),
+      switchMap((token) => {
+        admin = new Users(
+          null,
+          user.fullname,
+          user.phoneNumber,
+          user.email,
+          this.adminRole
+        );
+          return this.http.post<{name: string}>(
+            `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users.json?auth=${token}`, admin);
+          }),
+          take(1),
+          switchMap((resData) => {
+            generatedId = resData.name;
+            return this.users;
+          }),
+          take(1),
+          tap((users) => {
+            admin.id = generatedId;
+            this._users.next(users.concat(admin));
+          })
+      );
+  }
+
+  addUser(user: UserData){
+
+    let generatedId;
+    let newUser: Users;
+
+    return this.token.pipe(
+      take(1),
+      switchMap((token) => {
+        newUser = new Users(
+          null,
+          user.fullname,
+          user.phoneNumber,
+          user.email,
+          this.userRole
+        );
+          return this.http.post<{name: string}>(
+            `https://project-7819b-default-rtdb.europe-west1.firebasedatabase.app/users.json?auth=${token}`, newUser);
+          }),
+          take(1),
+          switchMap((resData) => {
+            generatedId = resData.name;
+            return this.users;
+          }),
+          take(1),
+          tap((users) => {
+            newUser.id = generatedId;
+            this._users.next(users.concat(newUser));
+          })
+      );
   }
 }
